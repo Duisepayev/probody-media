@@ -62,6 +62,20 @@ ul{list-style:none;margin-top:44px;display:flex;flex-direction:column;gap:20px}
 .typecover p{font-size:34px;line-height:1.3;color:#cfccc5;margin-top:28px;font-weight:500;max-width:820px}
 .photoband{position:absolute;left:0;right:0;bottom:0;height:560px;background-size:cover;background-position:center 35%}
 .photoband:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--ink) 0%,rgba(13,14,16,0) 35%,rgba(13,14,16,.15) 75%,rgba(13,14,16,.85) 100%)}
+.master .mphoto{position:absolute;left:0;right:0;top:0;height:880px;background-size:cover;background-position:center 20%}
+.master .mphoto:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,16,.85) 0%,rgba(13,14,16,0) 22%,rgba(13,14,16,0) 60%,var(--ink) 100%)}
+.master .info{position:absolute;left:84px;right:84px;top:640px;z-index:3}
+.master .meta{display:flex;gap:14px;align-items:center}
+.master .meta span{font-size:24px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;border-radius:8px;background:rgba(13,14,16,.7);border:1px solid #3a3d42}
+.master .meta span.y{background:var(--y);color:var(--ink);border-color:var(--y)}
+.master h2{font-weight:900;font-size:104px;line-height:1;letter-spacing:-.025em;margin-top:22px}
+.master .addr{font-size:28px;color:var(--mute);margin-top:12px;font-weight:500}
+.master .progs{margin-top:28px;border-top:2px solid #2a2d31}
+.master .progs div{display:flex;justify-content:space-between;align-items:baseline;font-size:33px;padding:16px 0;border-bottom:2px solid #2a2d31;color:#cfccc5}
+.master .progs div b{color:var(--paper);font-weight:800;font-variant-numeric:tabular-nums}
+.master .progs small{font-size:24px;color:var(--mute);margin-left:12px}
+.master .feats{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.master .feats span{font-size:25px;font-weight:600;color:var(--y);border:2px solid rgba(255,200,61,.45);border-radius:100px;padding:10px 20px}
 """
 
 
@@ -128,6 +142,13 @@ def slide_html(sl, i, n, base):
                  f'<div><span class="btn">{e(sl.get("btn","pro-body.kz"))} <i>→</i></span></div>'
                  + (f'<div class="chips">{chips}</div>' if chips else '') + '</div>')
         return frame(inner, i, n, 'cta')
+    if t == 'master':
+        progs = ''.join(f'<div><span>{e(p["n"])}<small>{p["d"]} мин</small></span><b>{p["p"]:,} ₸</b></div>'.replace(',', ' ') for p in sl['progs'])
+        feats = ''.join(f'<span>{e(f)}</span>' for f in sl.get('feats', []))
+        inner = (f'<div class="mphoto" style="background-image:url({img_uri(os.path.join(base, sl["photo"]))});background-position:{sl.get("pos","center 20%")}"></div>'
+                 f'<div class="info"><div class="meta"><span class="y">{e(sl["city"])}</span><span>{e(sl["kind"])}</span></div>'
+                 f'<h2>{e(sl["name"])}</h2><div class="addr">{e(sl["addr"])}</div><div class="progs">{progs}</div><div class="feats">{feats}</div></div>')
+        return frame(inner, i, n, 'master')
     raise ValueError(t)
 
 
