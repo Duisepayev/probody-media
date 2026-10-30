@@ -27,8 +27,15 @@ def listings():
 def img(url):
     os.makedirs(CACHE, exist_ok=True)
     p = os.path.join(CACHE, url)
-    if not os.path.exists(p):
-        urllib.request.urlretrieve(S3 + url, p)
+    for attempt in range(4):
+        if os.path.exists(p):
+            break
+        try:
+            urllib.request.urlretrieve(S3 + url, p)
+        except OSError:
+            if attempt == 3:
+                raise
+            import time; time.sleep(2 * (attempt + 1))
     return p
 
 
