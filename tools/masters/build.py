@@ -5,7 +5,8 @@ python3 build.py build SLUG DATE OUTDIR s1 s2 …  — собрать карус
 
 Фото: https://probody-images-kz.s3.ap-south-1.amazonaws.com/<images[].url>
 Отбор: только активные анкеты, фото уникальное (не встречается в других анкетах),
-нет отзывов с оценкой ≤2, анкета не была в рубрике последние 4 недели (masters.json).
+нет отзывов с оценкой ≤2, анкета не была в рубрике последние 4 недели (masters.json),
+анкеты из blocklist.json (по решению Максата) не берём никогда.
 Фото и описание проверять глазами: только рабочая форма, без откровенных поз и намёков.
 """
 import json, os, sys, subprocess, urllib.request, datetime
@@ -53,6 +54,8 @@ def recent_slugs(weeks=4):
 
 def candidates(outdir):
     a = listings(); recent = recent_slugs()
+    bl = os.path.join(HERE, 'blocklist.json')
+    recent |= set(json.load(open(bl))) if os.path.exists(bl) else set()
     hashes = {}
     for x in a:
         for m in x['images']:
