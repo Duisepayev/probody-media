@@ -221,7 +221,8 @@
       "c14-verified-5.jpg",
       "c14-verified-6.jpg",
       "c14-verified-7.jpg"
-    ]
+    ],
+    "note": "12.11: таймаут Windsor при публикации, не повторять; проверить media id 13.11."
   },
   {
     "date": "2026-11-14",
